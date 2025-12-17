@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Classes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{margin:0;font-family:Arial;background:#f2f2f2}
+    header{background:#1e88e5;color:#fff;padding:12px;text-align:center}
+    .card{
+      background:#fff;
+      margin:10px;
+      padding:10px;
+      border-radius:10px;
+      box-shadow:0 2px 5px rgba(0,0,0,.1);
+    }
+    img{width:100%;border-radius:8px}
+    h3{margin:8px 0}
+  </style>
+</head>
+<body>
+
+<header>📚 Online Classes</header>
+<div id="content"></div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("lectures")) || [];
+
+let html = "";
+data.forEach((l,i)=>{
+  html += `
+    <div class="card" onclick="openLecture(${i})">
+      <img src="${l.thumb}">
+      <h3>${l.title}</h3>
+      <small>📘 ${l.batch}</small>
+    </div>
+  `;
+});
+
+document.getElementById("content").innerHTML = html;
+
+function openLecture(i){
+  localStorage.setItem("currentLecture", i);
+  window.location.href = "lecture.html";
+}
+</script>
+
+</body>
+</html>

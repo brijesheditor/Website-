@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{font-family:Arial;padding:15px}
+    input,button{
+      width:100%;padding:8px;margin:5px 0
+    }
+    .box{
+      border:1px solid #ccc;
+      padding:10px;margin-top:8px
+    }
+    .btn{
+      background:#1e88e5;color:#fff;border:none
+    }
+    .del{background:#e53935;color:#fff;border:none}
+  </style>
+</head>
+<body>
+<button onclick="logout()">Logout</button>
+
+<script>
+function logout(){
+  localStorage.removeItem("adminLogin");
+  window.location.href="login.html";
+}
+</script>
+<h2>🛠 Admin Panel</h2>
+
+<input id="batch" placeholder="Batch Name">
+<input id="title" placeholder="Lecture Title">
+<input id="video" placeholder="YouTube EMBED link">
+<input id="thumb" placeholder="Thumbnail Image URL">
+
+<button class="btn" onclick="addLecture()">Add Lecture</button>
+<button onclick="updateLecture()">Update Lecture</button>
+
+<hr>
+<h3>All Lectures</h3>
+<div id="list"></div>
+<script>
+if(localStorage.getItem("adminLogin")!=="yes"){
+  window.location.href="login.html";
+}
+</script>
+<script>
+let editIndex = null;
+
+function getData(){
+  return JSON.parse(localStorage.getItem("lectures")) || [];
+}
+function saveData(d){
+  localStorage.setItem("lectures", JSON.stringify(d));
+}
+
+function addLecture(){
+  let data = getData();
+  data.push({
+    batch:batch.value,
+    title:title.value,
+    video:video.value,
+    thumb:thumb.value
+  });
+  saveData(data);
+  clearForm();
+  show();
+}
+
+function editLecture(i){
+  let d = getData()[i];
+  batch.value = d.batch;
+  title.value = d.title;
+  video.value = d.video;
+  thumb.value = d.thumb;
+  editIndex = i;
+}
+
+function updateLecture(){
+  if(editIndex===null){
+    alert("Edit button dabao pehle");
+    return;
+  }
+  let data = getData();
+  data[editIndex] = {
+    batch:batch.value,
+    title:title.value,
+    video:video.value,
+    thumb:thumb.value
+  };
+  saveData(data);
+  editIndex = null;
+  clearForm();
+  show();
+}
+
+function delLecture(i){
+  let d = getData();
+  d.splice(i,1);
+  saveData(d);
+  show();
+}
+
+function show(){
+  let html="";
+  getData().forEach((l,i)=>{
+    html += `
+      <div class="box">
+        <b>${l.title}</b><br>
+        <small>${l.batch}</small><br><br>
+        <button onclick="editLecture(${i})">✏️ Edit</button>
+        <button class="del" onclick="delLecture(${i})">❌ Delete</button>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+}
+
+function clearForm(){
+  batch.value="";title.value="";video.value="";thumb.value="";
+}
+
+const batch=document.getElementById("batch");
+const title=document.getElementById("title");
+const video=document.getElementById("video");
+const thumb=document.getElementById("thumb");
+const list=document.getElementById("list");
+
+show();
+</script>
+
+</body>
+</html>

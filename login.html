@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{
+      font-family:Arial;
+      background:#f2f2f2;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+    .box{
+      background:#fff;
+      padding:20px;
+      width:300px;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,.2);
+    }
+    input,button{
+      width:100%;
+      padding:8px;
+      margin:6px 0;
+    }
+    button{
+      background:#1e88e5;
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+    
+    body{
+  margin:0;
+  font-family: 'Arial', sans-serif;
+  background: #121212; /* Dark background */
+  color: #fff; /* Text color white */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  transition: all 0.5s;
+}
+
+.box{
+  background:#1e1e1e; /* Dark card */
+  padding:30px 25px;
+  width:320px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.5); /* Thoda darker shadow */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+input{
+  width:100%;
+  padding:10px 40px 10px 10px;
+  border:1px solid #444; /* Darker border */
+  border-radius:8px;
+  outline:none;
+  background:#2c2c2c; /* Input background dark */
+  color:#fff; /* Input text white */
+}
+
+input:focus{
+  border-color:#1e88e5;
+  box-shadow: 0 0 5px #1e88e5;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#1e88e5;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:16px;
+  transition: 0.3s;
+}
+
+button:hover{
+  background:#1565c0;
+}
+
+.toggle-password{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform: translateY(-50%);
+  cursor:pointer;
+  font-size:14px;
+  color:#ccc; /* Light text for toggle */
+}
+
+.footer{
+  text-align:center;
+  margin-top:10px;
+  font-size:12px;
+  color:#aaa; /* Lighter footer text */
+}
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h3>🔐 Admin Login</h3>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<script>
+function login(){
+  // Inputs ko reliably get karna
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if(u === "admin" && p === "12345"){
+    localStorage.setItem("adminLogin","yes");
+    window.location.href = "admin.html";
+  } else {
+    alert("Wrong login! Try again.");
+  }
+}
+</script>
+
+</body>
+</html>
+
+ 
+ 
