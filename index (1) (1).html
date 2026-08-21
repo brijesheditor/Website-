@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="theme-color" content="#000000">
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <title>𓍯𝐁𝐫𝐢𝐣𝐞𝐬𝐡✿</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- NEW PLAYER SCRIPTS START -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/hls-video-element/+esm"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/youtube-video-element/+esm"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/player.style/sutro/+esm"></script>
+    <!-- NEW PLAYER SCRIPTS END -->
+     <script src="devtools-detector.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* --- ETERNITY THEME ENGINE --- */
+        :root {
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --bg-deep: #050505;
+            --bg-card: #0f0f11;
+            --bg-gradient-end: #0a0a0a;
+            --text-main: #e4e4e7;
+            --border: rgba(255, 255, 255, 0.08);
+            --surface: #18181b;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --bg-deep: #f3f4f6;
+            --bg-card: #ffffff;
+            --bg-gradient-end: #e5e7eb;
+            --text-main: #111827;
+            --border: rgba(0, 0, 0, 0.1);
+            --surface: #ffffff;
+        }
+
+        /* Light Mode Overrides */
+        body.light-mode .text-white { color: #111827 !important; }
+        body.light-mode .text-gray-200 { color: #1f2937 !important; }
+        body.light-mode .text-gray-300 { color: #374151 !important; }
+        body.light-mode .text-gray-400 { color: #4b5563 !important; }
+        body.light-mode .text-gray-500 { color: #6b7280 !important; }
+        
+        body.light-mode .bg-black { background-color: #ffffff !important; }
+        body.light-mode .bg-\[\#050505\] { background-color: var(--bg-deep) !important; }
+        body.light-mode .bg-\[\#050505\]\/80 { background-color: rgba(243, 244, 246, 0.8) !important; }
+        body.light-mode .bg-\[\#050505\]\/90 { background-color: rgba(243, 244, 246, 0.9) !important; }
+        body.light-mode .bg-\[\#0f0f11\] { background-color: #ffffff !important; }
+        body.light-mode .bg-\[\#111\] { background-color: #ffffff !important; }
+        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.05) !important; }
+        body.light-mode .bg-white\/10 { background-color: rgba(0,0,0,0.1) !important; }
+        
+        body.light-mode .from-black { --tw-gradient-from: white !important; }
+        body.light-mode .from-\[\#0f0f11\] { --tw-gradient-from: #000000c2 !important; }
+        
+        body.light-mode .border-white\/5 { border-color: rgba(0,0,0,0.05) !important; }
+        body.light-mode .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .border-gray-800 { border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .border-\[\#333\] { border-color: rgba(0,0,0,0.1) !important; }
+        body.light-mode .border-\[\#222\] { border-color: rgba(0,0,0,0.1) !important; }
+        
+        /* Specific fix for inputs in light mode */
+        body.light-mode .sci-input {
+            background: #fff;
+            border-color: #ddd;
+            color: var(--primary);
+        }
+
+        /* NEW PLAYER CSS */
+        media-theme-sutro {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            display: block;
+        }
+
+        /* --- SKIP & FULLSCREEN OVERLAY STYLES --- */
+        #video-wrapper {
+            position: relative;
+            border-radius: 15px;
+            padding: 0px 20px;
+            overflow: hidden;
+        }
+
+        .ripple-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 60;
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.05);
+            transition: opacity 0.2s;
+        }
+
+        .ripple-left {
+            left: 0;
+            border-radius: 0 100px 100px 0;
+        }
+
+        .ripple-right {
+            right: 0;
+            border-radius: 100px 0 0 100px;
+        }
+
+        .ripple-center {
+            left: 30%;
+            width: 40%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+
+        .ripple-active {
+            animation: rippleEffect 0.5s ease-out;
+        }
+
+        @keyframes rippleEffect {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Security: Prevent Selection */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Dynamic Theme Classes */
+        body.theme-neon {
+            --primary: #06b6d4;
+            --primary-glow: rgba(6, 182, 212, 0.5);
+        }
+
+        body.theme-matrix {
+            --primary: #22c55e;
+            --primary-glow: rgba(34, 197, 94, 0.5);
+        }
+
+        body.theme-Royal {
+            --primary: #f59e0b;
+            --primary-glow: rgba(245, 158, 11, 0.5);
+        }
+
+        body.theme-rose {
+            --primary: #f43f5e;
+            --primary-glow: rgba(244, 63, 94, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-deep) !important;
+            color: var(--text-main) !important;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: 90px;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.5s;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .glass-card {
+            background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-gradient-end) 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        .glass-card:hover::after {
+            left: 150%;
+        }
+
+        .glass-card:active {
+            transform: scale(0.98);
+        }
+
+        .neon-border-bottom {
+            border-bottom: 1px solid var(--primary);
+            box-shadow: 0 4px 15px -5px var(--primary-glow);
+        }
+
+        /* Zen Mode */
+        body.zen-active header,
+        body.zen-active .nav-dock {
+            display: none !important;
+        }
+
+        body.zen-active #page-player {
+            background: #000;
+            z-index: 9999;
+            padding-top: 0;
+        }
+
+        /* Progress Circle */
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(closest-side, var(--bg-deep) 79%, transparent 80% 100%),
+                conic-gradient(var(--primary) var(--progress), #333 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animations */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Inputs */
+        .sci-input {
+            background: #000;
+            border: 1px solid #333;
+            color: var(--primary);
+            font-family: monospace;
+            transition: 0.3s;
+        }
+
+        .sci-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* --- START PROFESSIONAL SLIDER CSS --- */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .slider-container {
+            display: flex;
+            width: 100%;
+            height: 200px;
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide.active img {
+            transform: scale(1.1);
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+            padding: 20px;
+            color: white;
+            z-index: 3;
+        }
+
+        .slide-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .slide-content p {
+            font-size: 0.8rem;
+            color: #ccc;
+            margin-bottom: 10px;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Nav Arrows */
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            cursor: pointer;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .slider-wrapper:hover .slider-nav {
+            opacity: 1;
+        }
+
+        .slider-nav:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .prev-slide {
+            left: 15px;
+        }
+
+        .next-slide {
+            right: 15px;
+        }
+
+        /* Professional Expanding Dots */
+        .slider-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .hero-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary-glow);
+            transition: transform 0.2s;
+        }
+
+        .hero-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* --- END PROFESSIONAL SLIDER CSS --- */
+    </style>
+</head>
+
+<body class="">
+
+    <div id="app-splash"
+        class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center transition-opacity duration-1000">
+        <div class="relative mb-8">
+            <div class="absolute -inset-8 bg-[var(--primary)] rounded-full blur-3xl opacity-20 animate-pulse"></div>
+            <i
+                class="fa-solid fa-graduation-cap text-7xl text-[var(--primary)] relative z-10 animate-pulse drop-shadow-[0_0_15px_var(--primary)]"></i>
+        </div>
+        <h1 class="text-5xl font-black text-white">༄𝐌𝐑 𝐁𝐑𝐈𝐉𝐄𝐒𝐇࿐</h1>
+
+        <div class="w-48 h-1 bg-[#222] rounded-full mt-8 overflow-hidden">
+            <div class="h-full bg-[var(--primary)] w-full animate-pulse"></div>
+        </div>
+    </div>
+
+    <header
+        class="fixed w-full z-40 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 h-16 flex items-center px-5 justify-between transition-all neon-border-bottom">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+            <i class="fa-solid fa-graduation-cap text-2xl text-[var(--primary)] animate-pulse"></i>
+            <span class="font-bold text-lg tracking-widest">𝐒𝐞𝐥𝐞𝐜𝐭𝐢𝐨𝐧<span
+                    style="color: var(--primary)">𝐖𝐚𝐲</span></span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="installBtn" onclick="installPWA()" style="display: none;"
+                class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition text-[var(--primary)] animate-bounce">
+                <i class="fas fa-download text-xs"></i>
+            </button>
+            <button onclick="openThemeSettings()"
+                class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+                <i class="fas fa-palette text-xs text-gray-400"></i>
+            </button>
+            <div onclick="switchTab('profile')" class="w-9 h-9 rounded-full p-[2px]"
+                style="background: linear-gradient(45deg, var(--primary), transparent)">
+                <img id="header-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Felix"
+                    class="w-full h-full rounded-full bg-black object-cover">
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full mx-auto max-w-5xl pt-24">
+
+        <div id="tab-home" class="page active px-5">
+
+            <!--  START PROFESSIONAL SLIDER (IMPORTED) -->
+            <div class="slider-wrapper">
+                <div class="slider-container" id="slider-main">
+                    <!-- Slide 1 -->
+                    <div class="slide active">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1765199237740-WhatsApp_Image_2025-12-08_at_6.33.09_PM.jpeg"
+                            alt="Banner 1">
+                        <div class="slide-content">
+                            <h2>Selection Batch 2</h2>
+                            <p>A Journey Towards Success</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('690b0cdc6aeca24e9397ab6f', 'Selection Batch 2')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="slide">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1765199172618-WhatsApp_Image_2025-12-08_at_6.33.10_PM_(2).jpeg"
+                            alt="Banner 2">
+                        <div class="slide-content">
+                            <h2>Maths Special</h2>
+                            <p>Master Arithmetic & Advanced Maths with concepts that make you a champion</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('690b0fa65085387730114664', 'Maths Special')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="slide">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1762335998045-harish_sir_red_Science.png"
+                            alt="Banner 4">
+                        <div class="slide-content">
+                            <h2>Science Foundation</h2>
+                            <p>Accelerate your preparation with our dedicated English experts.</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('68dbd32801d050d5b62e45cc', 'Science Foundation')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4 -->
+                    <div class="slide">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1765199250481-WhatsApp_Image_2025-12-08_at_6.33.08_PM.jpeg"
+                            alt="Banner 3">
+                        <div class="slide-content">
+                            <h2>Complete General Studies</h2>
+                            <p>History, Polity, Geography & Science - All in one place</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('68dbd69163a1698bf4194575', 'Complete General Studies')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+                    <!-- Slide 5 -->
+                    <div class="slide">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1765199189747-WhatsApp_Image_2025-12-08_at_6.33.10_PM_(1).jpeg"
+                            alt="Banner 4">
+                        <div class="slide-content">
+                            <h2>Complete English</h2>
+                            <p>Accelerate your preparation with our dedicated English experts.</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('68dbd51563a1698bf4194573', 'Complete English')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+                    <!-- Slide 6 -->
+                    <div class="slide">
+                        <img src="https://selectionwayserver.hranker.com/courses/banners/1765199217026-WhatsApp_Image_2025-12-08_at_6.33.11_PM.jpeg"
+                            alt="Banner 5">
+                        <div class="slide-content">
+                            <h2>Complete Reasoning</h2>
+                            <p>Enhance your reasoning abilities and achieve success.</p>
+                            <button class="hero-btn"
+                                onclick="confirmOpenBatch('690b0fa65085387730114664', 'Complete Reasoning')">Explore
+                                Course</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Navigation Arrows -->
+                <div class="slider-nav prev-slide" onclick="moveSlide(-1)"><i class="fas fa-chevron-left"></i></div>
+                <div class="slider-nav next-slide" onclick="moveSlide(1)"><i class="fas fa-chevron-right"></i></div>
+                <!-- Dots Indicators -->
+                <div class="slider-dots" id="dots-container"></div>
+            </div>
+            <!--  END PROFESSIONAL SLIDER -->
+
+            <div id="resume-section" class="mb-8 hidden">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full animate-ping" style="background: var(--primary)"></span> Continue
+                </h3>
+                <div class="glass-card p-4 flex items-center gap-4 cursor-pointer hover:border-[var(--primary)] transition"
+                    onclick="resumeVideo()">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-white/5"
+                        style="color: var(--primary)">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 id="resume-title" class="text-white font-bold text-sm truncate">...</h4>
+                        <p class="text-[13px] text-gray-400 font-mono">RESUME SESSION</p>
+                    </div>
+                    <i class="fas fa-chevron-right ml-auto text-gray-600"></i>
+                </div>
+            </div>
+
+            <!-- SEARCH BAR ADDITION -->
+            <div class="relative mb-6">
+                <i class="fas fa-search absolute left-4 top-3.5 text-gray-500 z-10"></i>
+                <input type="text" id="batch-search" placeholder="Search Batches..."
+                    class="w-full bg-[#0f0f11] border border-[#222] rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-600 focus:border-[var(--primary)] focus:shadow-[0_0_15px_rgba(139,92,246,0.1)] outline-none transition"
+                    oninput="filterBatches()">
+            </div>
+
+            <div class="flex items-center justify-between mb-5">
+                <!-- AUTO COUNTER TITLE -->
+                <h3 class="text-lg font-bold text-white tracking-tight" id="batch-count-label">⚡Active All Batches ( 0 )
+                </h3>
+            </div>
+
+            <div id="skeleton-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            <div id="batch-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 hidden"></div>
+        </div>
+
+        <div id="tab-favorites" class="page px-5">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <i class="fas fa-heart text-red-500"></i> Saved Batches
+            </h2>
+            <div id="fav-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </div>
+
+        <div id="tab-bookmarks" class="page px-5">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <i class="fas fa-bookmark" style="color: var(--primary)"></i> Video Archives
+            </h2>
+            <div id="bookmark-grid" class="grid gap-3"></div>
+        </div>
+
+        <div id="tab-profile" class="page px-5">
+            <div class="text-center mb-8">
+                <div
+                    class="w-24 h-24 mx-auto mb-4 rounded-full p-1 border-2 border-[var(--primary)] shadow-[0_0_20px_var(--primary-glow)]">
+                    <img id="profile-page-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Felix"
+                        class="w-full h-full rounded-full bg-black">
+                </div>
+                <h2 id="profile-name" class="text-2xl font-bold text-white">User</h2>
+                <div class="flex justify-center gap-2 mt-2">
+                    <span class="text-[10px] bg-[var(--primary)] text-black font-bold px-2 py-0.5 rounded">PRO
+                        USER</span>
+                    <span
+                        class="text-[10px] bg-white/10 text-white font-bold px-2 py-0.5 rounded border border-white/10"
+                        id="profile-goal">IDLE</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="glass-card p-4 flex flex-col items-center justify-center">
+                    <div class="progress-circle mb-3" id="progress-chart" style="--progress: 0%">
+                        <div
+                            class="w-[70px] h-[70px] bg-[#0f0f11] rounded-full flex items-center justify-center text-xs font-bold text-white">
+                            <span id="progress-text">0%</span>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest">Completion</span>
+                </div>
+                <div class="grid grid-rows-2 gap-4">
+                    <div class="glass-card p-4 flex flex-col justify-center">
+                        <span class="text-2xl font-bold text-white" id="stat-total-watched">0</span>
+                        <span class="text-[10px] text-gray-500 uppercase">Videos Done</span>
+                    </div>
+                    <div class="glass-card p-4 flex flex-col justify-center">
+                        <span class="text-2xl font-bold text-white" id="stat-bookmarks">0</span>
+                        <span class="text-[10px] text-gray-500 uppercase">Bookmarks</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="openEditProfile()"
+                    class="w-full glass-card p-4 flex items-center justify-between group">
+                    <span class="text-sm font-semibold text-gray-300 group-hover:text-white transition">Edit
+                        Profile</span>
+                    <i class="fas fa-pen text-xs text-gray-500"></i>
+                </button>
+                <button onclick="openThemeSettings()"
+                    class="w-full glass-card p-4 flex items-center justify-between group">
+                    <span
+                        class="text-sm font-semibold text-gray-300 group-hover:text-white transition">Appearance</span>
+                    <i class="fas fa-palette text-xs text-gray-500"></i>
+                </button>
+                <button onclick="clearData()"
+                    class="w-full glass-card p-4 flex items-center justify-between group border-red-900/30 hover:bg-red-900/10">
+                    <span class="text-sm font-semibold text-red-400">System Reset</span>
+                    <i class="fas fa-power-off text-xs text-red-500"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="page-batch-menu" class="page px-5">
+            <button onclick="goHome()"
+                class="mb-6 text-xs font-bold text-gray-500 hover:text-white flex items-center gap-2 uppercase tracking-widest">
+                <i class="fas fa-arrow-left"></i> Home
+            </button>
+            <h2 id="details-batch-title" class="text-3xl font-bold text-white mb-6 leading-tight"></h2>
+
+            <div class="grid gap-4">
+                <div onclick="openSection('lectures')"
+                    class="glass-card p-6 flex items-center gap-5 cursor-pointer hover:border-[var(--primary)] group">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center text-xl transition group-hover:scale-110 bg-white/5"
+                        style="color: var(--primary)">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Lectures</h3>
+                        <p class="text-xs text-gray-500 font-mono">VIDEO MODULES</p>
+                    </div>
+                </div>
+                <div onclick="openSection('pdfs')"
+                    class="glass-card p-6 flex items-center gap-5 cursor-pointer hover:border-[var(--primary)] group">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center text-xl transition group-hover:scale-110 bg-white/5 text-white">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Notes</h3>
+                        <p class="text-xs text-gray-500 font-mono">DATA FILES</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-topics" class="page px-5">
+            <div class="sticky top-20 z-30 bg-[#050505] pb-4 border-b border-white/5 mb-4 pt-2">
+                <button onclick="showPage('page-batch-menu')"
+                    class="mb-2 text-xs font-bold text-gray-500 hover:text-white flex items-center gap-2 uppercase tracking-widest">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <h2 id="topic-list-title" class="text-xl font-bold text-white"></h2>
+            </div>
+            <div id="topic-loader" class="space-y-3"></div>
+            <div id="topic-grid" class="flex flex-col gap-3 pb-20"></div>
+        </div>
+
+        <div id="page-content-list" class="page px-5">
+            <div class="sticky top-20 z-30 bg-[#050505] pb-4 border-b border-white/5 mb-4 pt-2">
+                <button onclick="showPage('page-topics')"
+                    class="mb-2 text-xs font-bold text-gray-500 hover:text-white flex items-center gap-2 uppercase tracking-widest">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <h2 id="content-list-title" class="text-lg font-bold text-white line-clamp-1"></h2>
+            </div>
+            <div id="content-grid" class="flex flex-col gap-3 pb-20"></div>
+        </div>
+
+        <!-- NEW PLAYER UI -->
+        <div id="page-player" class="page fixed inset-0 z-[100] bg-black overflow-y-auto hidden">
+            <div class="w-full max-w-6xl mx-auto min-h-screen flex flex-col">
+
+                <div class="flex items-center justify-between p-4 bg-gradient-to-b from-black to-transparent z-10">
+                    <button onclick="closePlayer()"
+                        class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white hover:bg-white/20 transition">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="flex gap-3">
+                        <button onclick="toggleZenMode()"
+                            class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-gray-300 uppercase tracking-widest hover:bg-white/10 transition"
+                            id="zen-btn">
+                            <i class="fas fa-eye"></i> Zen Mode
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full bg-black relative shadow-[0_0_50px_rgba(0,0,0,0.5)]" id="video-wrapper">
+                    <!-- SKIP & FULLSCREEN OVERLAY STYLES  -->
+                    <div class="ripple-overlay ripple-left" id="ripple-left">
+                        <i class="fas fa-backward"></i>
+                    </div>
+
+                    <div class="ripple-overlay ripple-right" id="ripple-right">
+                        <i class="fas fa-forward"></i>
+                    </div>
+
+                    <media-theme-sutro id="sutro-player-theme">
+                        <hls-video id="player" slot="media" playsinline crossorigin="anonymous"></hls-video>
+                    </media-theme-sutro>
+                </div>
+
+                <div class="p-6 flex-1 bg-[#050505]">
+                    <div class="flex items-start justify-between gap-4 mb-6">
+                        <h2 id="player-title" class="text-xl font-bold text-white leading-snug"></h2>
+                        <div class="flex gap-2">
+                            <button onclick="toggleBookmark()" id="btn-bookmark"
+                                class="w-10 h-10 rounded-xl bg-[#111] border border-[#333] text-gray-500 hover:text-[var(--primary)] flex items-center justify-center transition tooltip"
+                                title="Save Video">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            <button onclick="markAsCompleted()" id="btn-complete"
+                                class="w-10 h-10 rounded-xl bg-[#111] border border-[#333] text-gray-500 hover:text-green-500 flex items-center justify-center transition tooltip"
+                                title="Mark Done">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase">Personal Notes</span>
+                            <button onclick="exportNotes()"
+                                class="text-[10px] text-[var(--primary)] hover:underline font-bold"><i
+                                    class="fas fa-download"></i> SAVE TXT</button>
+                        </div>
+                        <textarea id="video-notes" rows="8"
+                            class="w-full bg-black border border-[#333] rounded-lg p-3 text-sm text-gray-300 focus:outline-none focus:border-[var(--primary)] font-mono resize-none placeholder-gray-700"
+                            placeholder="Type here... Auto-saved."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <nav
+        class="nav-dock fixed bottom-0 w-full h-[80px] flex justify-around items-center z-50 pb-4 bg-[#050505]/90 backdrop-blur-xl border-t border-white/5">
+        <div class="nav-icon active flex flex-col items-center justify-center w-full h-full cursor-pointer text-gray-500 transition hover:text-white"
+            onclick="switchTab('home')" id="nav-home">
+            <i class="fas fa-home text-xl mb-1"></i> <span class="text-[10px] font-bold">Base</span>
+        </div>
+        <div class="nav-icon flex flex-col items-center justify-center w-full h-full cursor-pointer text-gray-500 transition hover:text-white"
+            onclick="switchTab('favorites')" id="nav-favorites">
+            <i class="fas fa-heart text-xl mb-1"></i> <span class="text-[10px] font-bold">Saved</span>
+        </div>
+        <div class="nav-icon flex flex-col items-center justify-center w-full h-full cursor-pointer text-gray-500 transition hover:text-white"
+            onclick="switchTab('bookmarks')" id="nav-bookmarks">
+            <i class="fas fa-bookmark text-xl mb-1"></i> <span class="text-[10px] font-bold">Videos</span>
+        </div>
+        <div class="nav-icon flex flex-col items-center justify-center w-full h-full cursor-pointer text-gray-500 transition hover:text-white"
+            onclick="switchTab('profile')" id="nav-profile">
+            <i class="fas fa-user-astronaut text-xl mb-1"></i> <span class="text-[10px] font-bold">Me</span>
+        </div>
+    </nav>
+
+    <div id="themeModal"
+        class="fixed inset-0 z-[150] bg-black/90 backdrop-blur-md hidden items-center justify-center p-5">
+        <div class="bg-[#111] border border-gray-800 rounded-2xl w-full max-w-xs p-6 relative">
+            <button onclick="closeThemeSettings()" class="absolute top-4 right-4 text-gray-500"><i
+                    class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-white mb-6">System Theme</h3>
+            
+            <div class="flex bg-black p-1 rounded-xl mb-6 border border-white/10">
+                <button onclick="setMode('dark')" id="btn-mode-dark" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-white bg-white/10">Dark</button>
+                <button onclick="setMode('light')" id="btn-mode-light" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-gray-500 hover:text-white">Light</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="setTheme('default')"
+                    class="p-3 rounded-xl border border-white/10 bg-white/5 text-white text-xs font-bold hover:border-violet-500 flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-violet-500"></div> Nebula
+                </button>
+                <button onclick="setTheme('neon')"
+                    class="p-3 rounded-xl border border-white/10 bg-white/5 text-white text-xs font-bold hover:border-cyan-500 flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-cyan-500"></div> Neon
+                </button>
+                <button onclick="setTheme('matrix')"
+                    class="p-3 rounded-xl border border-white/10 bg-white/5 text-white text-xs font-bold hover:border-green-500 flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div> Matrix
+                </button>
+                <button onclick="setTheme('Royal')"
+                    class="p-3 rounded-xl border border-white/10 bg-white/5 text-white text-xs font-bold hover:border-amber-500 flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-amber-500"></div> Royal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="fixed inset-0 z-[150] bg-black/90 hidden items-center justify-center p-5">
+        <div class="bg-[#111] border border-gray-800 rounded-2xl w-full max-w-xs p-6 relative">
+            <button onclick="closeEditProfile()" class="absolute top-4 right-4 text-gray-500"><i
+                    class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4">Identity</h3>
+            <input type="text" id="inputName"
+                class="w-full bg-black border border-[#333] text-white rounded-lg px-4 py-3 mb-3 text-sm"
+                placeholder="Codename">
+            <input type="text" id="inputGoal"
+                class="w-full bg-black border border-[#333] text-white rounded-lg px-4 py-3 mb-6 text-sm"
+                placeholder="Mission Objective">
+            <button onclick="saveProfile()"
+                class="w-full bg-[var(--primary)] text-black font-bold py-3 rounded-lg text-sm hover:opacity-90">UPDATE</button>
+        </div>
+    </div>
+
+    <div id="toast"
+        class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-[#111] border border-[var(--primary)] text-white px-5 py-2.5 rounded-lg shadow-[0_0_20px_var(--primary-glow)] z-[200] opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3">
+        <i class="fas fa-terminal text-[var(--primary)] text-xs"></i>
+        <span id="toast-msg" class="text-xs font-mono font-bold">System Updated</span>
+    </div>
+
+    <script>
+        const API_BASE = 'https://selectionway-api.onrender.com';
+
+        // --- SYSTEM STATE ---
+        let state = {
+            batches: [],
+            currentBatchId: null,
+            folders: [],
+            profile: JSON.parse(localStorage.getItem('profile') || '{"name":"User","goal":"Not Set","theme":"default","mode":"dark"}'),
+            bookmarks: JSON.parse(localStorage.getItem('bookmarks') || '[]'),
+            favorites: JSON.parse(localStorage.getItem('favs') || '[]'),
+            watched: JSON.parse(localStorage.getItem('watched') || '[]'),
+            resume: JSON.parse(localStorage.getItem('resume') || 'null'),
+            notes: JSON.parse(localStorage.getItem('notes') || '{}'),
+            streak: parseInt(localStorage.getItem('streak') || '0')
+        };
+
+        let currentUrl = '';
+        let lastTap = 0; // For double tap
+
+        /* --- PWA INSTALLATION --- */
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installBtn');
+            if (btn) btn.style.display = 'flex';
+        });
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installBtn').style.display = 'none';
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(console.error);
+        }
+
+        /* --- INIT --- */
+        window.onload = () => {
+            // Splash Timer
+            setTimeout(() => {
+                const splash = document.getElementById('app-splash');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 1000);
+            }, 2500);
+
+            applyTheme(state.profile.theme);
+            applyMode(state.profile.mode);
+            initSkeleton();
+            updateUI();
+            fetchBatches();
+            checkResume();
+            checkStreak();
+            initSlider(); // NEW SLIDER INIT
+            initDoubleTap(); // NEW PLAYER TAP INIT
+        };
+
+        /* --- THEME ENGINE --- */
+        function openThemeSettings() { 
+            document.getElementById('themeModal').classList.remove('hidden'); 
+            document.getElementById('themeModal').classList.add('flex'); 
+            updateModeButtons();
+        }
+        function closeThemeSettings() { document.getElementById('themeModal').classList.add('hidden'); document.getElementById('themeModal').classList.remove('flex'); }
+
+        function setTheme(theme) {
+            state.profile.theme = theme;
+            localStorage.setItem('profile', JSON.stringify(state.profile));
+            applyTheme(theme);
+            closeThemeSettings();
+            showToast(`THEME CHANGED TO ${theme.toUpperCase()}`);
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.remove('theme-neon', 'theme-matrix', 'theme-Royal', 'theme-rose');
+            if (theme !== 'default') document.body.classList.add(`theme-${theme}`);
+        }
+
+        function setMode(mode) {
+            state.profile.mode = mode;
+            localStorage.setItem('profile', JSON.stringify(state.profile));
+            applyMode(mode);
+            updateModeButtons();
+            showToast(`THEME CHANGED TO ${mode.toUpperCase()}`);
+        }
+
+        function applyMode(mode) {
+            if (mode === 'light') document.body.classList.add('light-mode');
+            else document.body.classList.remove('light-mode');
+        }
+
+        function updateModeButtons() {
+            const darkBtn = document.getElementById('btn-mode-dark');
+            const lightBtn = document.getElementById('btn-mode-light');
+            const activeClass = ['bg-white/10', 'text-white'];
+            const inactiveClass = ['text-gray-500', 'hover:text-white'];
+
+            if (state.profile.mode === 'light') {
+                lightBtn.classList.add(...activeClass); lightBtn.classList.remove(...inactiveClass);
+                darkBtn.classList.remove(...activeClass); darkBtn.classList.add(...inactiveClass);
+            } else {
+                darkBtn.classList.add(...activeClass); darkBtn.classList.remove(...inactiveClass);
+                lightBtn.classList.remove(...activeClass); lightBtn.classList.add(...inactiveClass);
+            }
+        }
+
+        /* --- DATA HANDLING --- */
+        async function fetchBatches() {
+            try {
+                const res = await fetch(`${API_BASE}/allbatch`);
+                const json = await res.json();
+                state.batches = json.data || json;
+                document.getElementById('skeleton-grid').style.display = 'none';
+                document.getElementById('batch-grid').classList.remove('hidden');
+                renderBatches(state.batches);
+            } catch (e) { showToast('Connection Error'); }
+        }
+
+        // --- NEW SEARCH FUNCTION ---
+        function filterBatches() {
+            const query = document.getElementById('batch-search').value.toLowerCase();
+            const filtered = state.batches.filter(b => b.title.toLowerCase().includes(query));
+            renderBatches(filtered);
+        }
+
+        function renderBatches(data) {
+            // Update Auto Counter
+            document.getElementById('batch-count-label').innerText = `⚡Active All Batches ( ${data.length} )`;
+
+            const grid = document.getElementById('batch-grid');
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center text-gray-500 py-10 font-mono">NO RESULTS FOUND</div>`;
+                return;
+            }
+
+            grid.innerHTML = data.map(b => {
+                const isFav = state.favorites.includes(b.id.toString());
+                return `
+                <div class="glass-card p-0 cursor-pointer group" onclick="confirmOpenBatch('${b.id}', '${b.title}')">
+                    <div class="h-32 bg-gray-800 relative overflow-hidden">
+                        <img src="${b.banner || b.image || 'https://placehold.co/600x400/111/FFF'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent"></div>
+                        <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 backdrop-blur text-white flex items-center justify-center hover:bg-red-500 transition ${isFav ? 'bg-red-500' : ''}" onclick="event.stopPropagation(); toggleFav('${b.id}')">
+                            <i class="fas fa-heart text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 relative">
+                        <h3 class="text-white font-bold leading-tight line-clamp-1 mb-1">${b.title}</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-[var(--primary)]"></span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">Access Granted</span>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        /* --- NAVIGATION --- */
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            document.querySelectorAll('.nav-icon').forEach(n => {
+                n.style.color = '#6b7280';
+                if (n.id === `nav-${tabId}`) n.style.color = 'var(--primary)';
+            });
+
+            if (tabId === 'favorites') renderFavs();
+            if (tabId === 'bookmarks') renderBookmarks();
+            if (tabId === 'profile') updateAnalytics();
+            window.scrollTo(0, 0);
+        }
+
+        function goHome() { switchTab('home'); }
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        /* --- BATCH & CONTENT --- */
+        function confirmOpenBatch(id, title) {
+            state.currentBatchId = id;
+            document.getElementById('details-batch-title').innerText = title;
+            showPage('page-batch-menu');
+        }
+
+        async function openSection(type) {
+            showPage('page-topics');
+            const title = type === 'lectures' ? 'Modules' : 'Archives';
+            document.getElementById('topic-list-title').innerText = title;
+            document.getElementById('topic-grid').innerHTML = '';
+            document.getElementById('topic-loader').innerHTML = `<div class="glass-card h-16 animate-pulse"></div>`.repeat(3);
+
+            const ep = type === 'lectures' ? `/chapter/${state.currentBatchId}` : `/pdf/${state.currentBatchId}`;
+            const key = type === 'lectures' ? 'classes' : 'topics';
+
+            try {
+                const res = await fetch(`${API_BASE}${ep}`);
+                const json = await res.json();
+                state.folders = json[key] || [];
+                document.getElementById('topic-loader').innerHTML = '';
+
+                document.getElementById('topic-grid').innerHTML = state.folders.map((f, i) => {
+                    // --- ITEM COUNTER LOGIC ADDED HERE ---
+                    const count = type === 'lectures' ? (f.classes ? f.classes.length : 0) : (f.pdfs ? f.pdfs.length : 0);
+
+                    return `
+                    <div class="glass-card p-4 flex items-center justify-between cursor-pointer hover:border-[var(--primary)]" onclick="openContent('${type}', ${i}, '${f.topicName}')">
+                        <div class="flex items-center gap-4">
+                            <i class="fas fa-folder text-[var(--primary)] text-2xl"></i>
+                            <div>
+                                <span class="text-sm font-bold text-gray-200 block">${f.topicName || 'System Folder'}</span>
+                                <span class="text-[14px] text-gray-500 font-mono">${count} Items</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
+                    </div>
+                `}).join('');
+            } catch (e) { document.getElementById('topic-loader').innerHTML = 'Error fetching data'; }
+        }
+
+        function openContent(type, index, name) {
+            showPage('page-content-list');
+            document.getElementById('content-list-title').innerText = name;
+            const items = type === 'lectures' ? state.folders[index].classes : state.folders[index].pdfs;
+
+            if (!items || items.length === 0) {
+                document.getElementById('content-grid').innerHTML = '<div class="text-center text-gray-500 py-10">No items found here.</div>';
+                return;
+            }
+
+            document.getElementById('content-grid').innerHTML = items.map(item => {
+                const isVid = type === 'lectures';
+                const link = isVid ? item.class_link : item.uploadPdf;
+                const isDone = isVid && state.watched.includes(link);
+                const isBookmarked = state.bookmarks.some(b => b.url === link);
+
+                return `
+                <div class="glass-card p-4 flex gap-4 cursor-pointer hover:bg-white/5 ${isDone ? 'border-l-2 border-l-green-500' : ''}" 
+                     onclick="${isVid ? `startPlayer('${link}', '${item.title.replace(/'/g, "\\'")}')` : `window.open('${link}')`}">
+                    <div class="w-10 h-10 rounded-lg bg-[#050505] border border-[#222] flex items-center justify-center shrink-0 text-[var(--primary)]">
+                        <i class="fas ${isVid ? 'fa-play' : 'fa-file-alt'} text-xs"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-gray-200 font-bold text-sm line-clamp-2 leading-snug">${item.title}</h4>
+                        <div class="flex gap-2 mt-2">
+                             ${isDone ? '<span class="text-[9px] text-green-500 font-bold uppercase">COMPLETED</span>' : ''}
+                             ${isBookmarked ? '<span class="text-[9px] text-[var(--primary)] font-bold uppercase"><i class="fas fa-bookmark"></i> SAVED</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        /* --- NEW PLAYER LOGIC --- */
+        // --- UPDATED PLAYER LOGIC ---
+        function startPlayer(url, title) {
+            currentUrl = url;
+            const page = document.getElementById('page-player');
+            const theme = document.getElementById('sutro-player-theme');
+
+            page.style.display = 'block';
+            setTimeout(() => page.classList.add('active'), 10);
+
+            document.getElementById('player-title').innerText = title;
+            document.getElementById('video-notes').value = state.notes[url] || '';
+            updatePlayerButtons();
+
+            // Check if it's a YouTube URL
+            const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+
+            // Clear previous player
+            theme.innerHTML = '';
+
+            let video;
+            if (isYouTube) {
+                // Create YouTube Element
+                video = document.createElement('youtube-video');
+                video.setAttribute('src', url);
+            } else {
+                // Create HLS Element
+                video = document.createElement('hls-video');
+                video.setAttribute('src', url);
+                video.setAttribute('crossorigin', 'anonymous');
+            }
+
+            // Set common attributes
+            video.id = 'player';
+            video.setAttribute('slot', 'media');
+            video.setAttribute('playsinline', '');
+            theme.appendChild(video);
+
+            let startTime = 0;
+            if (state.resume && state.resume.url === url) startTime = state.resume.time;
+
+            video.addEventListener('loadedmetadata', () => {
+                if (startTime > 0) video.currentTime = startTime;
+                video.play();
+            }, { once: true });
+
+            // Re-attach timeupdate for resume feature
+            video.addEventListener('timeupdate', handleTimeUpdate);
+        }
+
+        function closePlayer() {
+            const video = document.getElementById('player');
+            if (video) {
+                if (video.currentTime > 5) {
+                    saveResume(currentUrl, document.getElementById('player-title').innerText, video.currentTime);
+                }
+                video.pause();
+                // Remove the element to stop YouTube background playback
+                video.remove();
+            }
+            document.getElementById('page-player').style.display = 'none';
+            document.body.classList.remove('zen-active');
+            checkResume();
+        }
+
+        /* --- DOUBLE TAP & FULLSCREEN --- */
+        function initDoubleTap() {
+            const wrapper = document.getElementById('video-wrapper');
+            const ripLeft = document.getElementById('ripple-left');
+            const ripRight = document.getElementById('ripple-right');
+
+            wrapper.addEventListener('click', (e) => {
+                const video = document.getElementById('player');
+                if (!video) return;
+
+                const now = Date.now();
+                if (now - lastTap < 300) {
+                    const rect = wrapper.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const width = rect.width;
+
+                    if (x < width * 0.3) {
+                        video.currentTime = Math.max(0, video.currentTime - 10);
+                        triggerRipple(ripLeft);
+                    } else if (x > width * 0.7) {
+                        video.currentTime = Math.min(video.duration, video.currentTime + 10);
+                        triggerRipple(ripRight);
+                    } else {
+                        // Center double tap - toggle fullscreen
+                        if (!document.fullscreenElement) wrapper.requestFullscreen();
+                        else document.exitFullscreen();
+                    }
+                }
+                lastTap = now;
+            });
+        }
+
+        function triggerRipple(el) {
+            el.classList.remove('ripple-active');
+            void el.offsetWidth;
+            el.classList.add('ripple-active');
+        }
+
+        /* --- FEATURES --- */
+        function toggleZenMode() {
+            document.body.classList.toggle('zen-active');
+            const btn = document.getElementById('zen-btn');
+            if (document.body.classList.contains('zen-active')) {
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i> Exit Zen';
+                btn.classList.add('bg-white/20');
+            } else {
+                btn.innerHTML = '<i class="fas fa-eye"></i> Zen Mode';
+                btn.classList.remove('bg-white/20');
+            }
+        }
+
+        function markAsCompleted(auto = false) {
+            if (!state.watched.includes(currentUrl)) {
+                state.watched.push(currentUrl);
+                localStorage.setItem('watched', JSON.stringify(state.watched));
+                updatePlayerButtons();
+                confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#8b5cf6', '#fff'] });
+                if (!auto) showToast('Lesson Completed');
+            }
+        }
+
+        function toggleBookmark() {
+            const idx = state.bookmarks.findIndex(b => b.url === currentUrl);
+            if (idx > -1) {
+                state.bookmarks.splice(idx, 1);
+                showToast('Removed Bookmark');
+            } else {
+                state.bookmarks.push({ url: currentUrl, title: document.getElementById('player-title').innerText });
+                showToast('Bookmark Saved');
+            }
+            localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+            updatePlayerButtons();
+        }
+
+        function toggleFav(id) {
+            if (state.favorites.includes(id.toString())) {
+                state.favorites = state.favorites.filter(i => i !== id.toString());
+                showToast('Removed from Saved');
+            } else {
+                state.favorites.push(id.toString());
+                showToast('Batch Saved');
+            }
+            localStorage.setItem('favs', JSON.stringify(state.favorites));
+
+            if (document.getElementById('tab-favorites').classList.contains('active')) renderFavs();
+            else fetchBatches(); // Refresh hearts on home
+        }
+
+        function renderFavs() {
+            const data = state.batches.filter(b => state.favorites.includes(b.id.toString()));
+            const el = document.getElementById('fav-grid');
+            if (data.length === 0) {
+                el.innerHTML = `
+                    <div class="col-span-1 sm:col-span-2 flex items-center justify-center h-[40vh]">
+                        <span class="text-gray-600 font-mono text-sm tracking-widest uppercase">No Favorites Batches</span>
+                    </div>
+                `;
+            } else {
+                el.innerHTML = ''; // Clear only if there is data
+                renderBatchesData(data, el);
+            }
+        }
+
+        function renderBatchesData(data, grid) {
+            grid.innerHTML = data.map(b => `
+                <div class="glass-card p-0 cursor-pointer group" onclick="confirmOpenBatch('${b.id}', '${b.title}')">
+                    <div class="h-32 bg-gray-800 relative overflow-hidden">
+                        <img src="${b.banner || b.image || 'https://placehold.co/600x400/111/FFF'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent"></div>
+                        <button class="absolute top-2 right-2 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center" onclick="event.stopPropagation(); toggleFav('${b.id}')">
+                            <i class="fas fa-heart text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 relative">
+                        <h3 class="text-white font-bold leading-tight line-clamp-1 mb-1">${b.title}</h3>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBookmarks() {
+            const grid = document.getElementById('bookmark-grid');
+            if (state.bookmarks.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-1 sm:col-span-2 flex items-center justify-center h-[40vh]">
+                        <span class="text-gray-600 font-mono text-sm tracking-widest uppercase">No Saved Videos</span>
+                    </div>
+                `;
+                return;
+            }
+            grid.innerHTML = state.bookmarks.map(b => `
+                <div class="glass-card p-4 flex items-center justify-between cursor-pointer hover:bg-white/5" onclick="startPlayer('${b.url}', '${b.title.replace(/'/g, "\\'")}')">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <i class="fas fa-play-circle text-[var(--primary)]"></i>
+                        <span class="text-sm font-bold text-gray-200 truncate">${b.title}</span>
+                    </div>
+                    <button class="text-red-500 hover:text-red-400 p-2" onclick="event.stopPropagation(); removeBookmark('${b.url}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function removeBookmark(url) {
+            state.bookmarks = state.bookmarks.filter(b => b.url !== url);
+            localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+            renderBookmarks();
+        }
+
+        function updatePlayerButtons() {
+            const isDone = state.watched.includes(currentUrl);
+            const isSaved = state.bookmarks.some(b => b.url === currentUrl);
+
+            const btnDone = document.getElementById('btn-complete');
+            const btnSave = document.getElementById('btn-bookmark');
+
+            if (isDone) btnDone.classList.add('text-green-500'); else btnDone.classList.remove('text-green-500');
+            if (isSaved) btnSave.classList.add('text-[var(--primary)]'); else btnSave.classList.remove('text-[var(--primary)]');
+        }
+
+        function exportNotes() {
+            const text = document.getElementById('video-notes').value;
+            if (!text) return showToast('Notes empty');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const elem = document.createElement('a');
+            elem.href = URL.createObjectURL(blob);
+            elem.download = 'My_Notes.txt';
+            elem.click();
+            showToast('Notes Exported');
+        }
+
+        document.getElementById('video-notes').addEventListener('input', (e) => {
+            state.notes[currentUrl] = e.target.value;
+            localStorage.setItem('My_notes', JSON.stringify(state.notes));
+        });
+
+        /* --- CORE HELPERS --- */
+        function saveResume(url, title, time) {
+            state.resume = { url, title, time };
+            localStorage.setItem('resume', JSON.stringify(state.resume));
+        }
+
+        function checkResume() {
+            if (state.resume && state.resume.title) {
+                document.getElementById('resume-section').classList.remove('hidden');
+                document.getElementById('resume-title').innerText = state.resume.title;
+            }
+        }
+
+        function resumeVideo() { if (state.resume) startPlayer(state.resume.url, state.resume.title); }
+
+        function updateUI() {
+            document.getElementById('profile-name').innerText = state.profile.name;
+            document.getElementById('profile-goal').innerText = state.profile.goal;
+            const av = `https://api.dicebear.com/7.x/bottts/svg?seed=${state.profile.name}`;
+            document.getElementById('header-avatar').src = av;
+            document.getElementById('profile-page-avatar').src = av;
+        }
+
+        function updateAnalytics() {
+            document.getElementById('stat-total-watched').innerText = state.watched.length;
+            document.getElementById('stat-bookmarks').innerText = state.bookmarks.length;
+            const pct = Math.min(100, Math.floor((state.watched.length / 50) * 100));
+            document.getElementById('progress-chart').style.setProperty('--progress', `${pct}%`);
+            document.getElementById('progress-text').innerText = `${pct}%`;
+        }
+
+        /* --- PROFILE EDIT --- */
+        function openEditProfile() {
+            document.getElementById('editProfileModal').classList.remove('hidden');
+            document.getElementById('editProfileModal').classList.add('flex');
+            document.getElementById('inputName').value = state.profile.name;
+            document.getElementById('inputGoal').value = state.profile.goal;
+        }
+        function closeEditProfile() { document.getElementById('editProfileModal').classList.add('hidden'); document.getElementById('editProfileModal').classList.remove('flex'); }
+
+        function saveProfile() {
+            state.profile.name = document.getElementById('inputName').value || 'User';
+            state.profile.goal = document.getElementById('inputGoal').value || 'Not Set';
+            localStorage.setItem('profile', JSON.stringify(state.profile));
+            updateUI();
+            closeEditProfile();
+            showToast('Profile Updated');
+        }
+
+        function initSkeleton() {
+            document.getElementById('skeleton-grid').innerHTML = Array(4).fill(0).map(() => `<div class="glass-card h-40 animate-pulse bg-white/5"></div>`).join('');
+        }
+
+        function clearData() {
+            if (confirm("Factory Reset System?")) { localStorage.clear(); location.reload(); }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.style.opacity = '1'; t.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translate(-50%, -20px)'; }, 2500);
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            const last = localStorage.getItem('last_visit');
+            if (last !== today) {
+                if (last === new Date(Date.now() - 86400000).toDateString()) state.streak++;
+                else state.streak = 1;
+                localStorage.setItem('streak', state.streak);
+                localStorage.setItem('last_visit', today);
+            }
+        }
+
+        /* --- PROFESSIONAL SLIDER LOGIC --- */
+        let slideIndex = 0;
+        let autoPlayInterval;
+
+        function initSlider() {
+            const slider = document.getElementById('slider-main');
+            const slides = document.querySelectorAll('.slide');
+            const dotsContainer = document.getElementById('dots-container');
+
+            if (!slider || slides.length === 0) return; // Guard
+
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            });
+            startAutoPlay();
+            const wrapper = document.querySelector('.slider-wrapper');
+            wrapper.addEventListener('mouseenter', stopAutoPlay);
+            wrapper.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        function moveSlide(step) {
+            const slider = document.getElementById('slider-main');
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            slides[slideIndex].classList.remove('active');
+            dots[slideIndex].classList.remove('active');
+            slideIndex = (slideIndex + step + slides.length) % slides.length;
+            slider.style.transform = `translateX(-${slideIndex * 100}%)`;
+            slides[slideIndex].classList.add('active');
+            dots[slideIndex].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            const diff = index - slideIndex;
+            moveSlide(diff);
+        }
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => { moveSlide(1); }, 5000);
+        }
+
+        function stopAutoPlay() { clearInterval(autoPlayInterval); }
+
+    </script>
+</body>
+
+</html>
