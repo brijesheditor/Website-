@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        /* 1. RESET & BASIC SETUP */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #f0f4f8, #e2e8f0);
+            min-height: 100vh; /* Changed from height to min-height for safety on small mobiles */
+            overflow-x: hidden; /* Only hide horizontal overflow */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #334155;
+            padding: 20px; /* Prevents content from touching edges on mobile */
+        }
+
+        /* 2. NAVIGATION */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .logo { 
+            font-weight: bold; 
+            font-size: 1.5rem; 
+            color: #242930;
+        }
+
+        /* 3. MAIN CONTAINER */
+        .container {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 4. THE GIANT BACKGROUND NUMBERS 
+           responsive update: using clamp() allows it to shrink on mobile */
+        .bg-number {
+            font-size: clamp(10rem, 30vw, 25rem); 
+            font-weight: 900;
+            color: white;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            line-height: 1;
+            user-select: none;
+            pointer-events: none; /* Allows clicking through numbers */
+        }
+
+        /* 5. THE MONSTER (The Character) */
+        .character-wrapper {
+            position: relative;
+            z-index: 2;
+            /* Responsive Height: 400px on desktop, smaller on mobile */
+            height: clamp(250px, 40vh, 400px); 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .character-img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+        }
+
+        /* 6. TEXT CONTENT */
+        .content {
+            position: relative;
+            z-index: 3;
+            margin-top: 1rem;
+            animation: slideUp 1s ease-out forwards;
+            opacity: 0;
+            padding: 0 15px;
+        }
+
+        h1 {
+            /* Responsive Font Size */
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        p { 
+            color: #94a3b8; 
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-home:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* 7. ANIMATIONS */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* 8. MOBILE SPECIFIC ADJUSTMENTS */
+        @media (max-width: 600px) {
+            .bg-number {
+                top: 40%; /* Move number higher on phone */
+            }
+            .character-wrapper {
+                margin-top: 20px;
+            }
+            p {
+                font-size: 0.9rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">✦</div>
+        <div class="logo">✦</div>
+    </nav>
+
+    <div class="container">
+        <!-- Background Number -->
+        <div class="bg-number">404</div>
+
+        <!-- The Monster Character -->
+        <div class="character-wrapper">
+            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/404-error-4461124-3696774.png" alt="Confused Monster" class="character-img">
+        </div>
+
+        <!-- Text Content -->
+        <div class="content">
+            <h1>Oops, I think we're lost...</h1>
+            <p>Let's get you back to somewhere familiar.</p>
+            <a href="index.html" class="btn-home">GO HOME</a>
+        </div>
+    </div>
+
+</body>
+</html>
